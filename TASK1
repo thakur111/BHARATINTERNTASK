@@ -1,44 +1,55 @@
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.TextView
+import tkinter as tk
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var inputTemperature: EditText
-    private lateinit var resultText: TextView
-    private lateinit var celsiusRadio: RadioButton
-    private lateinit var fahrenheitRadio: RadioButton
+def button_click(number):
+    current = entry.get()
+    entry.delete(0, tk.END)
+    entry.insert(0, current + str(number))
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+def clear():
+    entry.delete(0, tk.END)
 
-        inputTemperature = findViewById(R.id.inputTemperature)
-        resultText = findViewById(R.id.resultText)
-        celsiusRadio = findViewById(R.id.celsiusRadio)
-        fahrenheitRadio = findViewById(R.id.fahrenheitRadio)
-    }
+def calculate():
+    try:
+        expression = entry.get()
+        result = str(eval(expression))
+        entry.delete(0, tk.END)
+        entry.insert(0, result)
+    except Exception as e:
+        entry.delete(0, tk.END)
+        entry.insert(0, "Error")
 
-    fun convertTemperature(view: View) {
-        val temperatureText = inputTemperature.text.toString()
+# Create the main application window
+app = tk.Tk()
+app.title("Calculator")
 
-        if (temperatureText.isNotEmpty()) {
-            val temperature = temperatureText.toDouble()
-            val result: Double
+# Entry widget for displaying the current input
+entry = tk.Entry(app, width=20, font=('Helvetica', 20))
+entry.grid(row=0, column=0, columnspan=4)
 
-            if (celsiusRadio.isChecked) {
-                // Convert Celsius to Fahrenheit
-                result = (temperature * 9/5) + 32
-                resultText.text = "Result: $result°F"
-            } else if (fahrenheitRadio.isChecked) {
-                // Convert Fahrenheit to Celsius
-                result = (temperature - 32) * 5/9
-                resultText.text = "Result: $result°C"
-            }
-        } else {
-            resultText.text = "Please enter a valid temperature"
-        }
-    }
-}
+# Define buttons for numbers and operations
+buttons = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', 'C', '=', '+'
+]
+
+# Create and arrange the buttons
+row_num = 1
+col_num = 0
+
+for button_text in buttons:
+    if button_text == '=':
+        tk.Button(app, text=button_text, padx=20, pady=20, font=('Helvetica', 20), command=calculate).grid(row=row_num, column=col_num)
+    elif button_text == 'C':
+        tk.Button(app, text=button_text, padx=20, pady=20, font=('Helvetica', 20), command=clear).grid(row=row_num, column=col_num)
+    else:
+        tk.Button(app, text=button_text, padx=20, pady=20, font=('Helvetica', 20), command=lambda num=button_text: button_click(num)).grid(row=row_num, column=col_num)
+
+    col_num += 1
+    if col_num > 3:
+        col_num = 0
+        row_num += 1
+
+# Run the application
+app.mainloop()
