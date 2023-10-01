@@ -1,0 +1,44 @@
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.view.View
+import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.TextView
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var inputTemperature: EditText
+    private lateinit var resultText: TextView
+    private lateinit var celsiusRadio: RadioButton
+    private lateinit var fahrenheitRadio: RadioButton
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        inputTemperature = findViewById(R.id.inputTemperature)
+        resultText = findViewById(R.id.resultText)
+        celsiusRadio = findViewById(R.id.celsiusRadio)
+        fahrenheitRadio = findViewById(R.id.fahrenheitRadio)
+    }
+
+    fun convertTemperature(view: View) {
+        val temperatureText = inputTemperature.text.toString()
+
+        if (temperatureText.isNotEmpty()) {
+            val temperature = temperatureText.toDouble()
+            val result: Double
+
+            if (celsiusRadio.isChecked) {
+                // Convert Celsius to Fahrenheit
+                result = (temperature * 9/5) + 32
+                resultText.text = "Result: $result°F"
+            } else if (fahrenheitRadio.isChecked) {
+                // Convert Fahrenheit to Celsius
+                result = (temperature - 32) * 5/9
+                resultText.text = "Result: $result°C"
+            }
+        } else {
+            resultText.text = "Please enter a valid temperature"
+        }
+    }
+}
